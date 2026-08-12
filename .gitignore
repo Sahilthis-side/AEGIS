@@ -1,0 +1,45 @@
+.venv/
+venv/
+env/
+
+.env
+.env.*
+!.env.example
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+*.egg-info/
+build/
+dist/
+
+aegis-report.json
+aegis-report.md
+
+.vscode/
+.idea/
+
+.DS_Store
+Thumbs.db
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Environment
+.env
+.env.*
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Aegis reports
+aegis-report.json
+aegis-report.md

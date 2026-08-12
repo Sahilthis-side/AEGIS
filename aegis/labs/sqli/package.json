@@ -1,0 +1,11 @@
+{
+  "name": "aegis-sqli-lab",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "sql.js": "^1.13.0"
+  }
+}

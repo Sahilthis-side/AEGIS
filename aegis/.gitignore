@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+
+.env
+
+aegis-report.json
+aegis-report.md
