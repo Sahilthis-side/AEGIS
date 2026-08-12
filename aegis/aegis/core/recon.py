@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Optional
 from urllib.parse import urljoin
-
+import os
+import re
 import requests
 from bs4 import BeautifulSoup
 
@@ -36,8 +37,9 @@ class ReconResult:
 
 class ReconEngine:
 
-    def __init__(self, base_url: str):
+    def __init__(self,base_url: str,target_path: str | None = None,):
         self.base_url = base_url.rstrip("/")
+        self.target_path = target_path
 
     def request(self, path: str = "/"):
         url = urljoin(self.base_url + "/", path.lstrip("/"))
@@ -369,7 +371,119 @@ class ReconEngine:
             )
 
         return endpoints
+    def discover_source_endpoints(self):
+        """
+        Discover Express routes and their query parameters
+        directly from application source code.
+        """
 
+        endpoints = []
+
+        if not self.target_path:
+            return endpoints
+
+        # JavaScript / TypeScript source files only.
+        source_files = []
+
+        for root, _, files in os.walk(self.target_path):
+
+            # Skip dependency/build directories.
+            if "node_modules" in root:
+                continue
+
+            if ".git" in root:
+                continue
+
+            for filename in files:
+
+                if filename.endswith(
+                    (".js", ".jsx", ".ts", ".tsx")
+                ):
+                    source_files.append(
+                        os.path.join(root, filename)
+                    )
+
+        # Express route patterns:
+        #
+        # app.get("/fetch", ...)
+        # router.get("/users", ...)
+        # app.post("/login", ...)
+        #
+        route_pattern = re.compile(
+            r"""
+            \b
+            (?:app|router)
+            \.
+            (get|post|put|patch|delete|head|options)
+            \s*
+            \(
+            \s*
+            ["'`]([^"'`]+)["'`]
+            """,
+            re.IGNORECASE | re.VERBOSE,
+        )
+    
+        # Query parameters:
+        #
+        # req.query.url
+        # req.query.file
+        # request.query.id
+        #
+        query_pattern = re.compile(
+            r"""
+            \b
+            (?:req|request)
+            \.
+            query
+            \.
+            ([A-Za-z_][A-Za-z0-9_]*)
+            """,
+            re.IGNORECASE | re.VERBOSE,
+        )
+    
+        for source_file in source_files:
+    
+            try:
+    
+                with open(
+                    source_file,
+                    "r",
+                    encoding="utf-8",
+                    errors="ignore",
+                ) as file:
+    
+                    source = file.read()
+    
+            except OSError:
+                continue
+    
+            routes = route_pattern.findall(source)
+    
+            parameters = sorted(
+                set(
+                    query_pattern.findall(source)
+                )
+            )
+    
+            for method, path in routes:
+    
+                endpoint_parameters = [
+                    Parameter(
+                        name=parameter,
+                        location="query",
+                    )
+                    for parameter in parameters
+                ]
+    
+                endpoints.append(
+                    Endpoint(
+                        path=path,
+                        method=method.upper(),
+                        parameters=endpoint_parameters,
+                    )
+                )
+    
+        return endpoints
     def run(self):
 
         result = ReconResult(
@@ -420,7 +534,69 @@ class ReconEngine:
         result.endpoints = (
             self.discover_common_endpoints()
         )
-
+    
+        # -------------------------
+        # Source-aware endpoints
+        # -------------------------
+    
+        source_endpoints = (
+            self.discover_source_endpoints()
+        )
+    
+        existing = {
+            (
+                endpoint.method,
+                endpoint.path,
+            )
+            for endpoint in result.endpoints
+        }
+    
+        for endpoint in source_endpoints:
+    
+            key = (
+                endpoint.method,
+                endpoint.path,
+            )
+    
+            if key not in existing:
+    
+                result.endpoints.append(
+                    endpoint
+                )
+    
+                existing.add(key)
+    
+            else:
+                # Merge parameters into an endpoint
+                # that was already discovered dynamically.
+    
+                for existing_endpoint in result.endpoints:
+    
+                    if (
+                        existing_endpoint.method
+                        == endpoint.method
+                        and
+                        existing_endpoint.path
+                        == endpoint.path
+                    ):
+    
+                        existing_parameters = {
+                            parameter.name
+                            for parameter
+                            in existing_endpoint.parameters
+                        }
+    
+                        for parameter in endpoint.parameters:
+    
+                            if (
+                                parameter.name
+                                not in existing_parameters
+                            ):
+    
+                                existing_endpoint.parameters.append(
+                                    parameter
+                                )
+    
         # -------------------------
         # Add discovered forms
         # -------------------------

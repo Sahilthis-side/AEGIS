@@ -144,7 +144,7 @@ def scan(target: str):
             "\n[bold cyan]Reconnaissance[/bold cyan]"
         )
 
-        recon = ReconEngine(base_url)
+        recon = ReconEngine(base_url,target_path=info.path)
 
         result = recon.run()
         context.technologies = result.technologies
