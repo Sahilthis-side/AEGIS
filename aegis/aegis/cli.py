@@ -40,6 +40,9 @@ from aegis.security.xss import (
 from aegis.security.attack_surface import (
     AttackSurfaceAnalyzer,
 )
+from aegis.security.ssrf import (
+    SSRFSecurityValidator,
+)
 app = typer.Typer(
     name="aegis",
     help="AI-powered autonomous application security scanner."
@@ -339,6 +342,11 @@ def scan(target: str):
         )
         security_engine.register(
             PathTraversalSecurityValidator(
+                base_url
+            )
+        )
+        security_engine.register(
+            SSRFSecurityValidator(
                 base_url
             )
         )
