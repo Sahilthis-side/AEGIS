@@ -21,12 +21,6 @@ class MockSecurityModel(AgentModel):
             "endpoints",
             []
         )
-
-        # ==========================================
-        # STEP 1
-        # Find an endpoint with user input
-        # ==========================================
-
         if self.step == 1:
 
             for endpoint in endpoints:
@@ -60,12 +54,6 @@ class MockSecurityModel(AgentModel):
                             "parameter": parameter,
                         },
                     )
-
-        # ==========================================
-        # STEP 2
-        # Analyze validator result
-        # ==========================================
-
         if self.step == 2:
 
             validation = context.get(
@@ -128,12 +116,6 @@ class MockSecurityModel(AgentModel):
                     ),
                     finished=True,
                 )
-
-        # ==========================================
-        # STEP 3
-        # Finish after finding creation
-        # ==========================================
-
         if self.step == 3:
 
             return AgentResponse(

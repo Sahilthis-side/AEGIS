@@ -14,8 +14,6 @@ class SSRFValidator:
         path: str,
         parameter: str,
     ) -> ToolResult:
-
-        # Controlled internal target used by the SSRF lab.
         internal_url = (
             "http://127.0.0.1:4000/"
             "internal-secret"

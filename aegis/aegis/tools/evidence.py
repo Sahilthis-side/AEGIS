@@ -23,17 +23,11 @@ class RecordEvidenceTool(Tool):
         data=None,
         description: str = "",
     ) -> ToolResult:
-
-        # Make the tool tolerant if the model omits
-        # the description.
         if not description:
             description = (
                 f"Evidence collected for "
                 f"{evidence_type}."
             )
-
-        # The model sometimes returns JSON as a string.
-        # Convert it back into a Python object.
         if isinstance(data, str):
 
             try:

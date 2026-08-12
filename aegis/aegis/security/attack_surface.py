@@ -55,11 +55,6 @@ class AttackSurfaceAnalyzer:
                 parameter_lower = (
                     parameter_name.lower()
                 )
-
-                # -----------------------------
-                # XSS
-                # -----------------------------
-
                 if "xss" in available:
 
                     candidates.append({
@@ -73,11 +68,6 @@ class AttackSurfaceAnalyzer:
                             "may reach HTML output."
                         ),
                     })
-
-                # -----------------------------
-                # SQL Injection
-                # -----------------------------
-
                 if "sql_injection" in available:
 
                     candidates.append({
@@ -91,11 +81,6 @@ class AttackSurfaceAnalyzer:
                             "may influence a database query."
                         ),
                     })
-
-                # -----------------------------
-                # SSRF
-                # -----------------------------
-
                 if "ssrf" in available:
 
                     url_keywords = (
@@ -126,11 +111,6 @@ class AttackSurfaceAnalyzer:
                                 "network destination."
                             ),
                         })
-
-                # -----------------------------
-                # Path Traversal
-                # -----------------------------
-
                 if "path_traversal" in available:
 
                     file_keywords = (

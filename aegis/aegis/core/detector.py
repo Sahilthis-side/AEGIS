@@ -17,8 +17,6 @@ def detect_target(target_path: str) -> TargetInfo:
 
     if not path.exists():
         raise FileNotFoundError(f"Target does not exist: {path}")
-
-    # Node.js
     package_json = path / "package.json"
 
     if package_json.exists():
@@ -57,8 +55,6 @@ def detect_target(target_path: str) -> TargetInfo:
             package_manager="npm",
             start_command=start_command,
         )
-
-    # Python
     if (path / "requirements.txt").exists():
         return TargetInfo(
             path=str(path),
@@ -76,8 +72,6 @@ def detect_target(target_path: str) -> TargetInfo:
             package_manager="pip",
             start_command=None,
         )
-
-    # Java
     if (path / "pom.xml").exists():
         return TargetInfo(
             path=str(path),
@@ -86,8 +80,6 @@ def detect_target(target_path: str) -> TargetInfo:
             package_manager="maven",
             start_command=None,
         )
-
-    # Go
     if (path / "go.mod").exists():
         return TargetInfo(
             path=str(path),

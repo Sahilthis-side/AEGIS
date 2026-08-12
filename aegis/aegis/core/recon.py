@@ -120,11 +120,6 @@ class ReconEngine:
             response.text,
             "html.parser"
         )
-
-        # -------------------------
-        # Links
-        # -------------------------
-
         for tag in soup.find_all("a", href=True):
 
             url = urljoin(
@@ -134,11 +129,6 @@ class ReconEngine:
 
             if url.startswith(self.base_url):
                 links.append(url)
-
-        # -------------------------
-        # JavaScript
-        # -------------------------
-
         for tag in soup.find_all(
             "script",
             src=True
@@ -151,11 +141,6 @@ class ReconEngine:
 
             if url.startswith(self.base_url):
                 javascript_files.append(url)
-
-        # -------------------------
-        # Forms
-        # -------------------------
-
         for form in soup.find_all("form"):
 
             action = form.get(
@@ -214,14 +199,10 @@ class ReconEngine:
         common_paths = [
             "/",
             "/health",
-
-            # API
             "/api",
             "/api/v1",
             "/api/users",
             "/api/search",
-
-            # Authentication / account
             "/login",
             "/register",
             "/logout",
@@ -229,8 +210,6 @@ class ReconEngine:
             "/dashboard",
             "/profile",
             "/account",
-
-            # Search / data
             "/search",
             "/users",
             "/user",
@@ -238,8 +217,6 @@ class ReconEngine:
             "/item",
             "/products",
             "/product",
-
-            # File / document operations
             "/download",
             "/file",
             "/files",
@@ -248,17 +225,11 @@ class ReconEngine:
             "/documents",
             "/export",
             "/import",
-
-            # Common application resources
             "/config",
             "/settings",
-
-            # API documentation
             "/swagger",
             "/swagger.json",
             "/openapi.json",
-
-            # Metadata
             "/robots.txt",
         ]
 
@@ -291,43 +262,30 @@ class ReconEngine:
                     title = soup.title.string
 
             parameters = []
-
-            # Try common, harmless parameter names.
             candidate_parameters = [
-                # Search
                 "q",
                 "query",
                 "search",
-
-                # Identifiers
                 "id",
                 "user_id",
                 "item_id",
-
-                # General data
                 "username",
                 "name",
                 "page",
                 "limit",
                 "offset",
-
-                # File / filesystem
                 "file",
                 "path",
                 "filename",
                 "filepath",
                 "document",
                 "template",
-
-                # URLs / network
                 "url",
                 "uri",
                 "link",
                 "redirect",
                 "callback",
                 "target",
-
-                # Common application parameters
                 "type",
                 "format",
                 "sort",
@@ -342,9 +300,6 @@ class ReconEngine:
 
                 if test_response is None:
                     continue
-
-                # If the endpoint behaves differently when the
-                # parameter is supplied, record it.
                 if (
                     test_response.status_code
                     != response.status_code
@@ -381,13 +336,9 @@ class ReconEngine:
 
         if not self.target_path:
             return endpoints
-
-        # JavaScript / TypeScript source files only.
         source_files = []
 
         for root, _, files in os.walk(self.target_path):
-
-            # Skip dependency/build directories.
             if "node_modules" in root:
                 continue
 
@@ -402,13 +353,6 @@ class ReconEngine:
                     source_files.append(
                         os.path.join(root, filename)
                     )
-
-        # Express route patterns:
-        #
-        # app.get("/fetch", ...)
-        # router.get("/users", ...)
-        # app.post("/login", ...)
-        #
         route_pattern = re.compile(
             r"""
             \b
@@ -422,13 +366,6 @@ class ReconEngine:
             """,
             re.IGNORECASE | re.VERBOSE,
         )
-    
-        # Query parameters:
-        #
-        # req.query.url
-        # req.query.file
-        # request.query.id
-        #
         query_pattern = re.compile(
             r"""
             \b
@@ -489,11 +426,6 @@ class ReconEngine:
         result = ReconResult(
             base_url=self.base_url
         )
-
-        # -------------------------
-        # Initial request
-        # -------------------------
-
         response = self.request("/")
 
         if response is None:
@@ -508,11 +440,6 @@ class ReconEngine:
         result.technologies = (
             self.detect_technologies(response)
         )
-
-        # -------------------------
-        # Parse homepage
-        # -------------------------
-
         (
             links,
             javascript_files,
@@ -526,19 +453,9 @@ class ReconEngine:
         result.javascript_files = list(
             dict.fromkeys(javascript_files)
         )
-
-        # -------------------------
-        # Common endpoints
-        # -------------------------
-
         result.endpoints = (
             self.discover_common_endpoints()
         )
-    
-        # -------------------------
-        # Source-aware endpoints
-        # -------------------------
-    
         source_endpoints = (
             self.discover_source_endpoints()
         )
@@ -567,9 +484,6 @@ class ReconEngine:
                 existing.add(key)
     
             else:
-                # Merge parameters into an endpoint
-                # that was already discovered dynamically.
-    
                 for existing_endpoint in result.endpoints:
     
                     if (
@@ -596,11 +510,6 @@ class ReconEngine:
                                 existing_endpoint.parameters.append(
                                     parameter
                                 )
-    
-        # -------------------------
-        # Add discovered forms
-        # -------------------------
-
         existing = {
             (
                 endpoint.path,

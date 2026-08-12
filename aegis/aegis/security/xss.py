@@ -37,11 +37,6 @@ class XSSSecurityValidator(VulnerabilityValidator):
         )
 
         url = f"{self.base_url}{path}"
-
-        # --------------------------------------------------
-        # Phase 1: HTTP reflection check
-        # --------------------------------------------------
-
         try:
             response = requests.get(
                 url,
@@ -124,11 +119,6 @@ class XSSSecurityValidator(VulnerabilityValidator):
                     "content_type": content_type,
                 },
             )
-
-        # --------------------------------------------------
-        # Phase 2: Browser execution
-        # --------------------------------------------------
-
         browser_result = self._browser_test(
             url=url,
             parameter=parameter,

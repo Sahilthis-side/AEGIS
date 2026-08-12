@@ -30,11 +30,6 @@ class SQLInjectionValidator(Tool):
         )
 
         try:
-
-            # --------------------------------
-            # Baseline request
-            # --------------------------------
-
             baseline = requests.get(
                 url,
                 params={
@@ -42,11 +37,6 @@ class SQLInjectionValidator(Tool):
                 },
                 timeout=10,
             )
-
-            # --------------------------------
-            # Controlled SQLi test
-            # --------------------------------
-
             payload = "' OR '1'='1"
 
             attack = requests.get(
@@ -73,11 +63,6 @@ class SQLInjectionValidator(Tool):
                     "body_length": len(attack_body),
                 },
             }
-
-            # --------------------------------
-            # Basic deterministic analysis
-            # --------------------------------
-
             confirmed = False
             reason = ""
 

@@ -33,11 +33,6 @@ def generate_markdown_report(
     )
 
     lines.append("")
-
-    # ==========================================
-    # Attack Surface
-    # ==========================================
-
     lines.append("## Attack Surface")
     lines.append("")
 
@@ -55,11 +50,6 @@ def generate_markdown_report(
     )
 
     lines.append("")
-
-    # ==========================================
-    # Findings
-    # ==========================================
-
     lines.append("## Findings")
     lines.append("")
 
@@ -132,11 +122,6 @@ def generate_markdown_report(
             )
 
             lines.append("")
-
-    # ==========================================
-    # Evidence
-    # ==========================================
-
     lines.append("## Evidence Records")
     lines.append("")
 

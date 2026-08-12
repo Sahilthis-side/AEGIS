@@ -47,11 +47,6 @@ class SecurityAgent:
             "javascript_files": (
                 self.context.javascript_files
             ),
-
-            # -----------------------------------------
-            # Attack Surface
-            # -----------------------------------------
-
             "attack_surface": self.attack_surface,
 
             "findings": [

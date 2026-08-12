@@ -89,11 +89,6 @@ class OpenAIProvider(AgentModel):
 
             tools=tools,
         )
-
-        # ----------------------------------------
-        # Find a function call
-        # ----------------------------------------
-
         for item in response.output:
 
             if item.type == "function_call":
@@ -116,11 +111,6 @@ class OpenAIProvider(AgentModel):
                         "call_id": item.call_id,
                     },
                 )
-
-        # ----------------------------------------
-        # No tool call = model finished
-        # ----------------------------------------
-
         return AgentResponse(
             message=response.output_text,
             finished=True,

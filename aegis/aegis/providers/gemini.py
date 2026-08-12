@@ -120,11 +120,6 @@ class GeminiProvider(AgentModel):
         context,
         tools,
     ):
-
-        # ----------------------------------------
-        # First request
-        # ----------------------------------------
-
         if not self.contents:
 
             prompt = (
@@ -150,11 +145,6 @@ class GeminiProvider(AgentModel):
                     ],
                 )
             )
-
-        # ----------------------------------------
-        # Ask Gemini
-        # ----------------------------------------
-
         response = (
             self.client.models.generate_content(
                 model=self.model,
@@ -168,11 +158,6 @@ class GeminiProvider(AgentModel):
         candidate = response.candidates[0]
 
         model_content = candidate.content
-
-        # ----------------------------------------
-        # Inspect every returned part
-        # ----------------------------------------
-
         for part in model_content.parts:
 
             function_call = (
@@ -221,11 +206,6 @@ class GeminiProvider(AgentModel):
                         ),
                     },
                 )
-
-        # ----------------------------------------
-        # No tool call = finished
-        # ----------------------------------------
-
         self.contents.append(
             model_content
         )

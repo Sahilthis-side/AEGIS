@@ -258,11 +258,6 @@ class OpenRouterProvider(AgentModel):
         context,
         tools,
     ):
-
-        # ----------------------------------------
-        # First model request
-        # ----------------------------------------
-
         if not self.messages:
 
             self.messages.append(
@@ -271,11 +266,6 @@ class OpenRouterProvider(AgentModel):
                     "content": SYSTEM_PROMPT,
                 }
             )
-
-        # ----------------------------------------
-        # Add current scan state
-        # ----------------------------------------
-
         self.messages.append(
             {
                 "role": "user",
@@ -289,11 +279,6 @@ class OpenRouterProvider(AgentModel):
                 ),
             }
         )
-
-        # ----------------------------------------
-        # Ask OpenRouter
-        # ----------------------------------------
-
         response = (
             self.client.chat.completions.create(
                 model=self.model,
@@ -306,11 +291,6 @@ class OpenRouterProvider(AgentModel):
         message = (
             response.choices[0].message
         )
-
-        # ----------------------------------------
-        # Preserve assistant response
-        # ----------------------------------------
-
         assistant_message = {
             "role": "assistant",
             "content": message.content,
@@ -326,8 +306,6 @@ class OpenRouterProvider(AgentModel):
                     call.function.arguments
                     or "{}"
                 )
-
-                # Normalize / repair model-generated arguments
                 parsed_arguments = parse_tool_arguments(
                     raw_arguments
                 )
@@ -353,11 +331,6 @@ class OpenRouterProvider(AgentModel):
         self.messages.append(
             assistant_message
         )
-
-        # ----------------------------------------
-        # Tool call
-        # ----------------------------------------
-
         if message.tool_calls:
 
             call = message.tool_calls[0]
@@ -385,11 +358,6 @@ class OpenRouterProvider(AgentModel):
                     "tool_call_id": call.id,
                 },
             )
-
-        # ----------------------------------------
-        # No tool call
-        # ----------------------------------------
-
         return AgentResponse(
             message=message.content or "",
             finished=True,

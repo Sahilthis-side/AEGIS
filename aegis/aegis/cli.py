@@ -67,10 +67,6 @@ def scan(target: str):
 
     console.print(f"[bold]Target:[/bold] {target}\n")
 
-    # ==========================================
-    # TARGET DETECTION
-    # ==========================================
-
     try:
         info = detect_target(target)
 
@@ -97,10 +93,6 @@ def scan(target: str):
     )
 
     console.print(table)
-
-    # ==========================================
-    # DOCKER SANDBOX
-    # ==========================================
 
     console.print("\n[bold cyan]Sandbox[/bold cyan]")
 
@@ -135,10 +127,6 @@ def scan(target: str):
         console.print(
             f"Application: [cyan]{base_url}[/cyan]"
         )
-
-        # ==========================================
-        # RECONNAISSANCE
-        # ==========================================
 
         console.print(
             "\n[bold cyan]Reconnaissance[/bold cyan]"
@@ -192,25 +180,18 @@ def scan(target: str):
             "[green]✓[/green] Target is reachable"
         )
 
-        # Server
         if result.server:
 
             console.print(
                 f"[green]✓[/green] Server: "
                 f"{result.server}"
             )
-
-        # Technologies
         if result.technologies:
 
             console.print(
                 "[green]✓[/green] Technologies: "
                 + ", ".join(result.technologies)
             )
-
-        # ==========================================
-        # ENDPOINTS
-        # ==========================================
 
         if result.endpoints:
 
@@ -244,11 +225,6 @@ def scan(target: str):
                 )
 
             console.print(endpoint_table)
-
-        # ==========================================
-        # LINKS
-        # ==========================================
-
         if result.links:
 
             console.print(
@@ -260,11 +236,6 @@ def scan(target: str):
                 console.print(
                     f"  • {link}"
                 )
-
-        # ==========================================
-        # JAVASCRIPT
-        # ==========================================
-
         if result.javascript_files:
 
             console.print(
@@ -314,10 +285,6 @@ def scan(target: str):
             f"  Findings: "
             f"{len(context.findings)}"
         )
-        # ==========================================
-        # SECURITY AGENT
-        # ==========================================
-
         console.print(
             "\n[bold cyan]Security Agent[/bold cyan]"
         )
@@ -350,10 +317,6 @@ def scan(target: str):
                 base_url
             )
         )
-        # ==========================================
-        # ATTACK SURFACE ANALYSIS
-        # ==========================================
-
         attack_surface = AttackSurfaceAnalyzer(
             security_engine
         )
@@ -423,11 +386,6 @@ def scan(target: str):
             f"Findings: "
             f"{len(context.findings)}"
         )
-
-# ==========================================
-# REPORTING
-# ==========================================
-
         console.print(
             "\n[bold cyan]Generating Reports[/bold cyan]"
         )

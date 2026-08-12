@@ -48,8 +48,6 @@ class DockerSandbox:
             mem_limit="512m",
             pids_limit=256,
         )
-
-        # Get dynamically assigned host port
         self.container.reload()
 
         port_info = self.container.attrs["NetworkSettings"]["Ports"]
