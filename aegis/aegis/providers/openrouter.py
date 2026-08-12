@@ -318,21 +318,37 @@ class OpenRouterProvider(AgentModel):
 
         if message.tool_calls:
 
+            normalized_tool_calls = []
+
+            for call in message.tool_calls:
+
+                raw_arguments = (
+                    call.function.arguments
+                    or "{}"
+                )
+
+                # Normalize / repair model-generated arguments
+                parsed_arguments = parse_tool_arguments(
+                    raw_arguments
+                )
+
+                normalized_tool_calls.append(
+                    {
+                        "id": call.id,
+                        "type": "function",
+                        "function": {
+                            "name": call.function.name,
+                            "arguments": json.dumps(
+                                parsed_arguments,
+                                separators=(",", ":"),
+                            ),
+                        },
+                    }
+                )
+
             assistant_message[
                 "tool_calls"
-            ] = [
-                {
-                    "id": call.id,
-                    "type": "function",
-                    "function": {
-                        "name": call.function.name,
-                        "arguments": (
-                            call.function.arguments
-                        ),
-                    },
-                }
-                for call in message.tool_calls
-            ]
+            ] = normalized_tool_calls
 
         self.messages.append(
             assistant_message

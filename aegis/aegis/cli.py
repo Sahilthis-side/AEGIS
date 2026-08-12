@@ -22,6 +22,9 @@ from aegis.reporting.json_report import generate_json_report
 from aegis.reporting.markdown import generate_markdown_report
 from aegis.tools.source import ReadSourceTool
 from aegis.tools.files import ListSourceFilesTool
+from aegis.security.path_traversal import (
+    PathTraversalSecurityValidator,
+)
 from aegis.security.engine import (
     VulnerabilityEngine,
 )
@@ -331,6 +334,11 @@ def scan(target: str):
         )
         security_engine.register(
             XSSSecurityValidator(
+                base_url
+            )
+        )
+        security_engine.register(
+            PathTraversalSecurityValidator(
                 base_url
             )
         )

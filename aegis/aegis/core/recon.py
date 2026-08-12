@@ -212,22 +212,52 @@ class ReconEngine:
         common_paths = [
             "/",
             "/health",
+
+            # API
             "/api",
             "/api/v1",
-            "/login",
-            "/register",
-            "/admin",
-            "/dashboard",
-            "/search",
-            "/users",
-            "/profile",
-            "/account",
             "/api/users",
             "/api/search",
-            "/robots.txt",
+
+            # Authentication / account
+            "/login",
+            "/register",
+            "/logout",
+            "/admin",
+            "/dashboard",
+            "/profile",
+            "/account",
+
+            # Search / data
+            "/search",
+            "/users",
+            "/user",
+            "/items",
+            "/item",
+            "/products",
+            "/product",
+
+            # File / document operations
+            "/download",
+            "/file",
+            "/files",
+            "/upload",
+            "/document",
+            "/documents",
+            "/export",
+            "/import",
+
+            # Common application resources
+            "/config",
+            "/settings",
+
+            # API documentation
             "/swagger",
             "/swagger.json",
             "/openapi.json",
+
+            # Metadata
+            "/robots.txt",
         ]
 
         endpoints = []
@@ -262,13 +292,44 @@ class ReconEngine:
 
             # Try common, harmless parameter names.
             candidate_parameters = [
+                # Search
                 "q",
                 "query",
                 "search",
+
+                # Identifiers
                 "id",
+                "user_id",
+                "item_id",
+
+                # General data
                 "username",
                 "name",
                 "page",
+                "limit",
+                "offset",
+
+                # File / filesystem
+                "file",
+                "path",
+                "filename",
+                "filepath",
+                "document",
+                "template",
+
+                # URLs / network
+                "url",
+                "uri",
+                "link",
+                "redirect",
+                "callback",
+                "target",
+
+                # Common application parameters
+                "type",
+                "format",
+                "sort",
+                "filter",
             ]
 
             for parameter in candidate_parameters:
