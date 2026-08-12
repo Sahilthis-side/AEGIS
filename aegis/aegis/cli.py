@@ -96,7 +96,7 @@ def scan(target: str):
 
     console.print("\n[bold cyan]Sandbox[/bold cyan]")
 
-    sandbox = DockerSandbox(info.path)
+    sandbox = DockerSandbox(info)
 
     try:
 
